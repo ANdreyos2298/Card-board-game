@@ -7,9 +7,9 @@ from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 # --- НАСТРОЙКИ ---
-TOKEN = "ТВОЙ_ТОКЕН_ОТ_BOTFATHER"
+TOKEN = "8274120492:AAFhqqzbSdNbCUYrHkPWYSmYX8nQq2VWjDs"
 DAILY_REWARD = 100
-BASE_COOLDOWN = 60  # Секунд между карточками
+BASE_COOLDOWN = 3600  # Секунд между карточками
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -68,11 +68,11 @@ async def cmd_start(message: types.Message):
     await message.answer(
         "👋 Привет! Я бот для игры с карточками. 🐱\n\n"
         "🎮 **Как играть:**\n"
-        "• Пиши 'карточка' — получи кота и очки\n"
-        "• Пиши 'профиль' — твоя стата\n"
-        "• Пиши 'магазин' — прокачка\n"
-        "• Пиши 'ежедневка' — бонус 100 очков\n"
-        "• Пиши 'топ' — лучшие игроки\n\n"
+        "• Пиши 'Карточка' — получи кота и очки\n"
+        "• Пиши 'Профиль' — твоя стата\n"
+        "• Пиши 'Магазин' — прокачка\n"
+        "• Пиши 'Ежедневка' — бонус 100 очков\n"
+        "• Пиши 'Топ' — лучшие игроки\n\n"
         "Добавь меня в группу и начинай играть! ✨",
         reply_markup=builder.as_markup()
     )
@@ -80,7 +80,7 @@ async def cmd_start(message: types.Message):
 @dp.message(F.text.lower() == "профиль")
 async def cmd_profile(message: types.Message):
     user = get_user(message.from_user.id)
-    cd = max(10, BASE_COOLDOWN - user['cooldown_lvl'] * 10)
+    cd = max(500, BASE_COOLDOWN - user['cooldown_lvl'] * 500)
     text = (
         f"👤 **Профиль: {message.from_user.first_name}**\n"
         f"━━━━━━━━━━━━━━━━━━\n"
@@ -91,7 +91,7 @@ async def cmd_profile(message: types.Message):
     )
     await message.answer(text)
 
-@dp.message(F.text.lower() == "ежедневка")
+@dp.message(F.text.lower() == "Ежедневка")
 async def daily_bonus(message: types.Message):
     user = get_user(message.from_user.id)
     today = datetime.now().strftime("%Y-%m-%d")
@@ -102,7 +102,7 @@ async def daily_bonus(message: types.Message):
         update_user(user['id'], "last_daily_date", today)
         await message.reply(f"💰 Ежедневная награда **+{DAILY_REWARD}** получена! ✨")
 
-@dp.message(F.text.lower() == "карточка")
+@dp.message(F.text.lower() == "Карточка")
 async def give_card(message: types.Message):
     user = get_user(message.from_user.id)
     now = datetime.now()
@@ -127,7 +127,7 @@ async def give_card(message: types.Message):
     
     await message.reply(f"🐱 Твоя карточка: **{res}**\n💰 Награда: +{reward} (Всего: {user['points'] + reward})")
 
-@dp.message(F.text.lower() == "магазин")
+@dp.message(F.text.lower() == "Магазин")
 async def shop(message: types.Message):
     user = get_user(message.from_user.id)
     p1 = (user['cooldown_lvl'] + 1) * 200
@@ -161,7 +161,7 @@ async def buy_upgrade(message: types.Message):
             await message.reply("🍀 Удача повышена!")
         else: await message.reply("❌ Недостаточно очков!")
 
-@dp.message(F.text.lower() == "топ")
+@dp.message(F.text.lower() == "Топ")
 async def cmd_top(message: types.Message):
     conn = sqlite3.connect('cards_game.db')
     cursor = conn.cursor()
