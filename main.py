@@ -68,11 +68,11 @@ async def cmd_start(message: types.Message):
     await message.answer(
         "👋 Привет! Я бот для игры с карточками. 🐱\n\n"
         "🎮 **Как играть:**\n"
-        "• Пиши 'Карточка' — получи кота и очки\n"
-        "• Пиши 'Профиль' — твоя стата\n"
-        "• Пиши 'Магазин' — прокачка\n"
-        "• Пиши 'Ежедневка' — бонус 100 очков\n"
-        "• Пиши 'Топ' — лучшие игроки\n\n"
+        "• Пиши 'карточка' — получи кота и очки\n"
+        "• Пиши 'профиль' — твоя стата\n"
+        "• Пиши 'магазин' — прокачка\n"
+        "• Пиши 'ежедневка' — бонус 100 очков\n"
+        "• Пиши 'топ' — лучшие игроки\n\n"
         "Добавь меня в группу и начинай играть! ✨",
         reply_markup=builder.as_markup()
     )
@@ -91,7 +91,7 @@ async def cmd_profile(message: types.Message):
     )
     await message.answer(text)
 
-@dp.message(F.text.lower() == "Ежедневка")
+@dp.message(F.text.lower() == "ежедневка")
 async def daily_bonus(message: types.Message):
     user = get_user(message.from_user.id)
     today = datetime.now().strftime("%Y-%m-%d")
@@ -102,7 +102,7 @@ async def daily_bonus(message: types.Message):
         update_user(user['id'], "last_daily_date", today)
         await message.reply(f"💰 Ежедневная награда **+{DAILY_REWARD}** получена! ✨")
 
-@dp.message(F.text.lower() == "Карточка")
+@dp.message(F.text.lower() == "карточка")
 async def give_card(message: types.Message):
     user = get_user(message.from_user.id)
     now = datetime.now()
@@ -127,7 +127,7 @@ async def give_card(message: types.Message):
     
     await message.reply(f"🐱 Твоя карточка: **{res}**\n💰 Награда: +{reward} (Всего: {user['points'] + reward})")
 
-@dp.message(F.text.lower() == "Магазин")
+@dp.message(F.text.lower() == "магазин")
 async def shop(message: types.Message):
     user = get_user(message.from_user.id)
     p1 = (user['cooldown_lvl'] + 1) * 200
@@ -161,7 +161,7 @@ async def buy_upgrade(message: types.Message):
             await message.reply("🍀 Удача повышена!")
         else: await message.reply("❌ Недостаточно очков!")
 
-@dp.message(F.text.lower() == "Топ")
+@dp.message(F.text.lower() == "топ")
 async def cmd_top(message: types.Message):
     conn = sqlite3.connect('cards_game.db')
     cursor = conn.cursor()
